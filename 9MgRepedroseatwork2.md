@@ -87,6 +87,7 @@
 - Give .content a z-index: 1.
 
 - Guided Question: Why does the notice appear on top of the content? What happens if you swap the z‑index values?
+The notice is on top because its z-index (2) is higher than the content's z-index (1). If I swap the values, the notice will be hidden behind the content box.
 
 - Challenge: 
     * What changes that you have to do on the code that will position .notice box on the top right corner of the .content box? Please write the code on paper as well (both html and css on the part of .notice and .content).
