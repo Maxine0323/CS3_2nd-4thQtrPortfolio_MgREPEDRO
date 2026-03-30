@@ -128,14 +128,14 @@
         <tbody>
             <tr><td>1</td><td>CSS</td><td>27</td><td>Map container missing relative position</td><td>Added position: relative</td></tr>
             <tr><td>2</td><td>CSS</td><td>34</td><td>Plot point was position: static</td><td>Changed to position: absolute</td></tr>
-            <tr><td>3</td><td>JS</td><td>95</td><td>Comparison used assignment (=)</td><td>Changed to strict equality (===)</td></tr>
-            <tr><td>4</td><td>JS</td><td>92</td><td>Inputs treated as strings</td><td>Wrapped values in parseInt()</td></tr>
-            <tr><td>5</td><td>JS</td><td>107</td><td>appendChild called on wrong element</td><td>Targeted table body specifically</td></tr>
-            <tr><td>6</td><td>JS</td><td>106</td><td>className used as function</td><td>Used element.className = "name"</td></tr>
-            <tr><td>7</td><td>CSS</td><td>58</td><td>Sprite position misaligned</td><td>Adjusted background-position pixels</td></tr>
-            <tr><td>8</td><td>HTML</td><td>5</td><td>Missing author metadata</td><td>Added Maxine Repedro</td></tr>
-            <tr><td>9</td><td>JS</td><td>97</td><td>Logic for NO/NE swapped</td><td>Corrected coordinate boundaries</td></tr>
-            <tr><td>10</td><td>HTML</td><td>1</td><td>Missing Doctype declaration</td><td>Added &lt;!DOCTYPE html&gt;</td></tr>
+            <tr><td>3</td><td>JS</td><td>95</td><td>Comparison used assignment (=) instead of equality</td><td>Changed to strict equality (===)</td></tr>
+            <tr><td>4</td><td>JS</td><td>92</td><td>Input values treated as strings causing logic failure</td><td>Used parseInt() to convert to numbers</td></tr>
+            <tr><td>5</td><td>JS</td><td>107</td><td>appendChild called on the wrong element ID</td><td>Targeted table body specifically</td></tr>
+            <tr><td>6</td><td>JS</td><td>106</td><td>className applied as a function call</td><td>Corrected to element.className = "name"</td></tr>
+            <tr><td>7</td><td>CSS</td><td>58</td><td>Image sprite background-position was misaligned</td><td>Updated coordinates for the icon</td></tr>
+            <tr><td>8</td><td>HTML</td><td>5</td><td>Missing meta author information</td><td>Added Maxine Repedro</td></tr>
+            <tr><td>9</td><td>JS</td><td>97</td><td>Logic for coordinate boundaries was swapped</td><td>Fixed if-else logic for NO and NE</td></tr>
+            <tr><td>10</td><td>HTML</td><td>1</td><td>Missing mandatory Doctype declaration</td><td>Added &lt;!DOCTYPE html&gt;</td></tr>
         </tbody>
     </table>
 </div>
@@ -165,7 +165,7 @@
         const newPoint = document.createElement("div");
         newPoint.className = "plot-point";
         
-        const scale = 2; 
+        const scale = 1; 
         const posX = 150 + (x - n) * scale;
         const posY = 150 - (y - m) * scale;
         
