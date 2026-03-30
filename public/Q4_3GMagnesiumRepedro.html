@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Maxine Repedro">
+    <title>Nlogonia Debugging - Maxine Repedro</title>
+    <style>
+        body {
+            background-color: #ffeef2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #5d4a4a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #map-container {
+            width: 300px;
+            height: 300px;
+            background-color: #fffde7;
+            border: 1px solid #d4d4d4;
+            position: relative;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        .axis-h {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #757575;
+            z-index: 1;
+        }
+        .axis-v {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #757575;
+            z-index: 1;
+        }
+        .plot-point {
+            width: 8px;
+            height: 8px;
+            background-color: #f44336;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        .input-group { margin-bottom: 20px; }
+        input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ffb6c1;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #ffb6c1;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ffeef2;
+            padding: 10px;
+        }
+        th { background-color: #ffb6c1; color: white; }
+        .pink-row { background-color: #fff0f5; }
+        .error-log-section { margin-top: 40px; width: 90%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Nlogonia System</h2>
+    <div class="input-group">
+        <input type="number" id="divN" placeholder="N">
+        <input type="number" id="divM" placeholder="M">
+        <input type="number" id="resX" placeholder="X">
+        <input type="number" id="resY" placeholder="Y">
+        <button onclick="checkLocation()">Plot</button>
+    </div>
+
+    <div id="map-container">
+        <div class="axis-h"></div>
+        <div class="axis-v"></div>
+    </div>
+
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Coordinates</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="error-log-section">
+    <h3>Error Logs</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Part</th>
+                <th>Line</th>
+                <th>Description</th>
+                <th>Correction</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>CSS</td><td>27</td><td>Map container missing relative position</td><td>Added position: relative</td></tr>
+            <tr><td>2</td><td>CSS</td><td>34</td><td>Plot point was position: static</td><td>Changed to position: absolute</td></tr>
+            <tr><td>3</td><td>JS</td><td>95</td><td>Comparison used assignment (=)</td><td>Changed to strict equality (===)</td></tr>
+            <tr><td>4</td><td>JS</td><td>92</td><td>Inputs treated as strings</td><td>Wrapped values in parseInt()</td></tr>
+            <tr><td>5</td><td>JS</td><td>107</td><td>appendChild called on wrong element</td><td>Targeted table body specifically</td></tr>
+            <tr><td>6</td><td>JS</td><td>106</td><td>className used as function</td><td>Used element.className = "name"</td></tr>
+            <tr><td>7</td><td>CSS</td><td>58</td><td>Sprite position misaligned</td><td>Adjusted background-position pixels</td></tr>
+            <tr><td>8</td><td>HTML</td><td>5</td><td>Missing author metadata</td><td>Added Maxine Repedro</td></tr>
+            <tr><td>9</td><td>JS</td><td>97</td><td>Logic for NO/NE swapped</td><td>Corrected coordinate boundaries</td></tr>
+            <tr><td>10</td><td>HTML</td><td>1</td><td>Missing Doctype declaration</td><td>Added &lt;!DOCTYPE html&gt;</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function checkLocation() {
+        const n = parseInt(document.getElementById('divN').value);
+        const m = parseInt(document.getElementById('divM').value);
+        const x = parseInt(document.getElementById('resX').value);
+        const y = parseInt(document.getElementById('resY').value);
+        const container = document.getElementById('map-container');
+        
+        let result = "";
+
+        if (x === n || y === m) {
+            result = "divisa";
+        } else if (x > n && y > m) {
+            result = "NE";
+        } else if (x < n && y > m) {
+            result = "NO";
+        } else if (x < n && y < m) {
+            result = "SO";
+        } else if (x > n && y < m) {
+            result = "SE";
+        }
+
+        const newPoint = document.createElement("div");
+        newPoint.className = "plot-point";
+        
+        const scale = 2; 
+        const posX = 150 + (x - n) * scale;
+        const posY = 150 - (y - m) * scale;
+        
+        newPoint.style.left = Math.min(Math.max(posX, 0), 300) + "px";
+        newPoint.style.top = Math.min(Math.max(posY, 0), 300) + "px";
+        container.appendChild(newPoint);
+
+        const tableBody = document.querySelector("#resultsTable tbody");
+        const row = document.createElement("tr");
+        row.className = "pink-row";
+        row.innerHTML = `<td>(${n},${m}) to (${x},${y})</td><td>${result}</td>`;
+        tableBody.appendChild(row);
+    }
+</script>
+
+</body>
+</html>
